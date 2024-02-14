@@ -40,7 +40,12 @@ export default function Index() {
           </div>
         </section>
         <div className="flex w-full items-center justify-center gap-x-4">
-          <Button variant="outline">
+          <Button
+            variant="outline"
+            onClick={() => {
+              handleSignIn();
+            }}
+          >
             <GithubLogo className="h-6 w-6"></GithubLogo>
           </Button>
           <Button variant="outline">
