@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { Folders, HandGrabbing, ShareFat } from "@phosphor-icons/react";
-import Link from "next/link";
-import { Lamp } from "@/components/ui/lamp";
-import { ModeToggle } from "@/components/ui/toggle";
+import Image from 'next/image';
+import { Folders, HandGrabbing, ShareFat } from '@phosphor-icons/react';
+import Link from 'next/link';
+import { Lamp } from '@/components/ui/lamp';
+import { ModeToggle } from '@/components/ui/toggle';
 
 export default function Index() {
   return (
@@ -25,7 +25,7 @@ export default function Index() {
             <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
               Organize your memories with ease
             </h1>
-            <p className="text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+            <p className="text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Effortlessly group your photos into folders. Say goodbye to
               cluttered galleries.
             </p>
@@ -57,7 +57,7 @@ export default function Index() {
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
               Key Features
             </h2>
-            <p className="max-w-[700px] text-gray-500 md:text-xl/relaxed xl:text-xl/relaxed dark:text-gray-400">
+            <p className="max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed xl:text-xl/relaxed">
               Organize your photos with powerful tools designed for simplicity.
             </p>
           </div>
@@ -92,7 +92,7 @@ export default function Index() {
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
               Effortless Organization
             </h2>
-            <p className="text-gray-500 md:text-xl/relaxed xl:text-2xl/relaxed dark:text-gray-400">
+            <p className="text-gray-500 dark:text-gray-400 md:text-xl/relaxed xl:text-2xl/relaxed">
               With our app, you can spend less time organizing and more time
               enjoying your photos.
             </p>
