@@ -1,5 +1,3 @@
-import { auth } from '@/auth';
-
 export { auth as middleware } from '@/auth';
 
 // Optionally, don't invoke Middleware on some paths

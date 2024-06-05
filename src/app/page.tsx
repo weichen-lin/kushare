@@ -9,9 +9,9 @@ import { ModeToggle } from '@/components/ui/toggle';
 export default function Index() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="w-full py-4 drop-shadow-sm backdrop-blur-md lg:py-6 xl:py-8">
+      <header className="w-full py-4 drop-shadow-sm backdrop-blur-md dark:bg-white lg:py-6 xl:py-8">
         <div className="container flex items-center justify-between gap-x-6 px-4 md:px-6">
-          <div className="flex items-center gap-x-6">
+          <div className="flex items-center gap-x-6 dark:text-slate-900">
             <Image src="/icon.png" width={40} height={40} alt=""></Image>
             Kushare
           </div>

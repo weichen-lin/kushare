@@ -1,4 +1,5 @@
-import ThemeProvider from './theme'
-import AuthProvider from './auth'
+import ThemeProvider from './theme';
+import AuthProvider from './auth';
+import UserProvider from './user';
 
-export { ThemeProvider, AuthProvider }
+export { ThemeProvider, AuthProvider, UserProvider };

@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { signIn } from "next-auth/react";
-import Link from "next/link";
-import { ModeToggle } from "@/components/ui/toggle";
-import { GithubLogo, FacebookLogo, GoogleLogo } from "@phosphor-icons/react";
-import { Button } from "@/components/ui/button";
+import Image from 'next/image';
+import { signIn } from 'next-auth/react';
+import Link from 'next/link';
+import { ModeToggle } from '@/components/ui/toggle';
+import { GithubLogo, FacebookLogo, GoogleLogo } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
 
 export default function Index() {
   const handleSignIn = async () => {
-    const result = await signIn("github", { callbackUrl: "/stars" });
+    const result = await signIn('github', { callbackUrl: '/stars' });
     if (result?.error) {
-      console.error("Sign in failed:", result.error);
+      console.error('Sign in failed:', result.error);
     }
   };
 
@@ -22,7 +22,13 @@ export default function Index() {
           <div className="container flex items-center justify-around gap-x-6 px-4 md:px-6">
             <div className="flex items-center gap-x-6">
               <Link href="/">
-                <Image src="/icon.png" width={40} height={40} alt=""></Image>
+                <Image
+                  src="/icon.png"
+                  width={40}
+                  height={40}
+                  alt=""
+                  className="rounded-lg dark:bg-white"
+                ></Image>
               </Link>
               Kushare
             </div>
