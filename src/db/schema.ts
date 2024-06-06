@@ -8,9 +8,10 @@ import {
 } from 'drizzle-orm/pg-core';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
-import type { AdapterAccountType } from 'next-auth/adapters';
+import { v4 as uuidv4 } from 'uuid';
+import type { AdapterAccount } from 'next-auth/adapters';
 
-const connectionString = 'postgres://postgres:postgres@localhost:5432/drizzle';
+const connectionString = 'postgres://postgres:password@localhost:5432/local';
 const pool = postgres(connectionString, { max: 1 });
 
 export const db = drizzle(pool);
@@ -18,7 +19,7 @@ export const db = drizzle(pool);
 export const users = pgTable('user', {
   id: text('id')
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => uuidv4()),
   name: text('name'),
   email: text('email').notNull(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
@@ -31,7 +32,7 @@ export const accounts = pgTable(
     userId: text('userId')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
-    type: text('type').$type<AdapterAccountType>().notNull(),
+    type: text('type').$type<AdapterAccount>().notNull(),
     provider: text('provider').notNull(),
     providerAccountId: text('providerAccountId').notNull(),
     refresh_token: text('refresh_token'),

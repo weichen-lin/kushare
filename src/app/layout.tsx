@@ -1,32 +1,30 @@
-import type { Metadata } from "next";
-import { Alata } from "next/font/google";
-import "@/styles/globals.css";
-import { ThemeProvider, AuthProvider } from "@/components/provider";
+import type { Metadata } from 'next'
+import { Alata } from 'next/font/google'
+import '@/styles/globals.css'
+import { ThemeProvider } from '@/components/provider'
+import { ClerkProvider } from '@clerk/nextjs'
 
-const inter = Alata({ subsets: ["latin"], weight: "400" });
+const inter = Alata({ subsets: ['latin'], weight: '400' })
 
 export const metadata: Metadata = {
-  title: "Kushare",
-  description: "",
-};
+  title: 'Kushare',
+  description: '',
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang='en' suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>{children}</AuthProvider>
-        </ThemeProvider>
+        <ClerkProvider>
+          <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+            {children}
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
-  );
+  )
 }

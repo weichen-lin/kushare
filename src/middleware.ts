@@ -1,6 +1,7 @@
-export { auth as middleware } from '@/auth';
+import { clerkMiddleware } from '@clerk/nextjs/server'
 
-// Optionally, don't invoke Middleware on some paths
+export default clerkMiddleware()
+
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
-};
+  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api)(.*)'],
+}
