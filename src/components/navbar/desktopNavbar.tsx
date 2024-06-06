@@ -11,7 +11,7 @@ export default function DesktopNavbar() {
     <div
       className={clsx(
         'absolute top-0 left-0 w-full hidden md:flex',
-        'bg-white p-3 flex items-center justify-between dark:bg-slate-500',
+        'bg-white p-3 px-[3%] flex items-center justify-between dark:bg-slate-500',
         'border-b-[1px] border-slate-300',
       )}
     >
