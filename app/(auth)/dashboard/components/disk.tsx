@@ -21,7 +21,7 @@ export default function Disk() {
       <TabsList>
         <TabsTrigger value='folder' className='px-10 flex gap-x-2 items-center'>
           {activeTab === 'folder' ? (
-            <img src='double-check.gif' className='w-6 h-6' />
+            <img src='/double-check.gif' className='w-6 h-6' />
           ) : (
             <FolderIcon className='w-6 h-6 text-slate-700' />
           )}
@@ -29,7 +29,7 @@ export default function Disk() {
         </TabsTrigger>
         <TabsTrigger value='file' className='px-10 flex gap-x-2 items-center'>
           {activeTab === 'file' ? (
-            <img src='double-check.gif' className='w-6 h-6' />
+            <img src='/double-check.gif' className='w-6 h-6' />
           ) : (
             <FileImage className='w-6 h-6 text-slate-700' />
           )}
