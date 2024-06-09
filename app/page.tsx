@@ -26,8 +26,8 @@ export default function Index() {
               </Link>
             )}
             {!loading && isAuthenticated && (
-              <Link href='/dashboard'>
-                <Button>Dashboard</Button>
+              <Link href='/d'>
+                <Button>Disk</Button>
               </Link>
             )}
             <ModeToggle />

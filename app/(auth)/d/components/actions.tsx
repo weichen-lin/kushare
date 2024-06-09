@@ -5,6 +5,8 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Input } from '@/components/ui/input'
 import { FolderPlus, FileArrowUp } from '@phosphor-icons/react'
 import { useState } from 'react'
+import { useFolder } from '@/app/(auth)/d/hook'
+import { useParams } from 'next/navigation'
 
 export default function Actions() {
   const [open, setOpen] = useState(false)
@@ -16,7 +18,7 @@ export default function Actions() {
     setIsLoaded(true)
     setError('')
 
-    const response = await fetch('/api/disk/folder', {
+    const res = await fetch('/api/disk/folder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -27,11 +29,11 @@ export default function Actions() {
       }),
     })
 
-    if (response.ok) {
+    if (res.ok) {
       setOpen(false)
       setName('')
     } else {
-      const json = await response.json()
+      const json = await res.json()
       setError(json?.message ?? 'An error occurred')
     }
 
@@ -61,28 +63,34 @@ const AddFolder = () => {
   const [isLoaded, setIsLoaded] = useState(false)
   const [name, setName] = useState('')
   const [error, setError] = useState('')
+  const { folders, setFolders } = useFolder()
+
+  const params = useParams()
+  const folder_id = params.folder_id
 
   const createFolder = async () => {
     setIsLoaded(true)
     setError('')
 
-    const response = await fetch('/api/disk/folder', {
+    const res = await fetch('/api/disk/folder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        locate_at: null,
+        locate_at: folder_id ?? null,
         name,
       }),
     })
 
-    if (response.ok) {
+    const json = await res.json()
+
+    if (res.ok) {
       setOpen(false)
       setName('')
+      setFolders([...folders, json?.data])
     } else {
-      const json = await response.json()
-      setError(json?.message ?? 'An error occurred')
+      setError(json?.error ?? 'An error occurred')
     }
 
     setIsLoaded(false)

@@ -5,7 +5,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
 } from '@/components/ui/breadcrumb'
@@ -22,7 +21,7 @@ export default function Path() {
 
   useEffect(() => {
     const fetchPath = async () => {
-      const res = await fetch(`/api/disk/folder?folder_id=${params.folder_id}`)
+      const res = await fetch(`/api/disk?id=${params.folder_id}`)
       const data = await res.json()
       setPath(data.full_path)
     }
@@ -40,12 +39,16 @@ const BreadCrumbs = ({ path }: { path: IFullPath }) => {
   return (
     <Breadcrumb className='mt-4'>
       <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink href='/dashboard'>Root directory</BreadcrumbLink>
-        </BreadcrumbItem>
-        {path.length > 2 ? (
+        {path.length > 3 ? (
           <>
-            <BreadcrumbSeparator />
+            {path.slice(0, 1).map((p, i) => (
+              <span key={`bread-${p.id}`}>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink href='/d'>{p.name}</BreadcrumbLink>
+                </BreadcrumbItem>
+              </span>
+            ))}
             <BreadcrumbItem>
               <BreadcrumbEllipsis />
             </BreadcrumbItem>
@@ -53,7 +56,7 @@ const BreadCrumbs = ({ path }: { path: IFullPath }) => {
               <span key={`bread-${p.id}`}>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbLink href={`/dashboard/${p.id}`}>{p.name}</BreadcrumbLink>
+                  <BreadcrumbLink href={`/d/${p.id}`}>{p.name}</BreadcrumbLink>
                 </BreadcrumbItem>
               </span>
             ))}
@@ -62,9 +65,13 @@ const BreadCrumbs = ({ path }: { path: IFullPath }) => {
           <>
             {path.map((p, i) => (
               <span key={`bread-${p.id}`}>
-                <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbLink href={`/dashboard/${p.id}`}>{p.name}</BreadcrumbLink>
+                  {p.depth !== 0 && <BreadcrumbSeparator />}
+                  {p.depth === 0 ? (
+                    <BreadcrumbLink href='/d'>{p.name}</BreadcrumbLink>
+                  ) : (
+                    <BreadcrumbLink href={`/d/${p.id}`}>{p.name}</BreadcrumbLink>
+                  )}
                 </BreadcrumbItem>
               </span>
             ))}

@@ -15,11 +15,11 @@ const useStore = create<IUserStore>(set => ({
   setUser: (user: User) => set({ user }),
 }))
 
-const createClient = () =>
+export const browserClient = () =>
   createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 
 const useClientUser = () => {
-  const client = createClient()
+  const client = browserClient()
   const { user, setUser } = useStore()
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
