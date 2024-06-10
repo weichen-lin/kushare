@@ -5,55 +5,14 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Input } from '@/components/ui/input'
 import { FolderPlus, FileArrowUp } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { useFolder } from '@/app/(auth)/d/hook'
+import { useFolder, useFileUpload } from '@/app/(auth)/d/hook'
 import { useParams } from 'next/navigation'
 
 export default function Actions() {
-  const [open, setOpen] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [name, setName] = useState('')
-  const [error, setError] = useState('')
-
-  const createFolder = async () => {
-    setIsLoaded(true)
-    setError('')
-
-    const res = await fetch('/api/disk/folder', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        locate_at: null,
-        name,
-      }),
-    })
-
-    if (res.ok) {
-      setOpen(false)
-      setName('')
-    } else {
-      const json = await res.json()
-      setError(json?.message ?? 'An error occurred')
-    }
-
-    setIsLoaded(false)
-  }
-
-  const toggle = () => {
-    if (isLoaded) return
-    setOpen(!open)
-    setError('')
-    setName('')
-  }
-
   return (
     <div className='w-full flex gap-x-4 items-center'>
       <AddFolder />
-      <Button variant='outline' className='flex gap-x-2'>
-        <FileArrowUp className='w-5 h-5' />
-        <div className='hidden md:block'>Upload</div>
-      </Button>
+      <AddFile />
     </div>
   )
 }
@@ -139,5 +98,22 @@ const AddFolder = () => {
         </DialogContent>
       )}
     </Dialog>
+  )
+}
+
+const AddFile = () => {
+  const { handleFileUpload } = useFileUpload()
+
+  return (
+    <Button
+      variant='outline'
+      className='flex gap-x-2'
+      onClick={() => {
+        handleFileUpload(false)
+      }}
+    >
+      <FileArrowUp className='w-5 h-5' />
+      <div className='hidden md:block'>Upload</div>
+    </Button>
   )
 }
