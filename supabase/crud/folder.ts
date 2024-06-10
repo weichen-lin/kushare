@@ -1,5 +1,6 @@
 import { createClient } from '@/supabase/sever'
 import { z } from 'zod'
+import { UUIDParser } from './utils'
 
 interface Result<T> {
   data: T
@@ -25,19 +26,6 @@ const folderSchema = z.object({
 
 export type IFullPath = z.infer<typeof fullPathSchema>
 export type IFolder = z.infer<typeof folderSchema>
-
-function UUIDParser(s: string | null): boolean {
-  if (!s) {
-    return false
-  }
-
-  try {
-    const id = z.string().uuid().parse(s)
-    return true
-  } catch (e) {
-    return false
-  }
-}
 
 function fixAndParseJSONString(ori: string | null): IFullPath {
   if (!ori) {

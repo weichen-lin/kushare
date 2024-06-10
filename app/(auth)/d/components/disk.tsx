@@ -2,6 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Folders from './folder'
+import Files from './file'
 import { useState } from 'react'
 import { Folder as FolderIcon, FileImage } from '@phosphor-icons/react'
 
@@ -19,7 +20,7 @@ export default function Disk() {
       }}
     >
       <TabsList>
-        <TabsTrigger value='folder' className='px-10 flex gap-x-2 items-center'>
+        <TabsTrigger value='folder' className='px-8 flex gap-x-2 items-center'>
           {activeTab === 'folder' ? (
             <img src='/double-check.gif' className='w-6 h-6' />
           ) : (
@@ -27,7 +28,7 @@ export default function Disk() {
           )}
           Folder
         </TabsTrigger>
-        <TabsTrigger value='file' className='px-10 flex gap-x-2 items-center'>
+        <TabsTrigger value='file' className='px-8 flex gap-x-2 items-center'>
           {activeTab === 'file' ? (
             <img src='/double-check.gif' className='w-6 h-6' />
           ) : (
@@ -40,7 +41,7 @@ export default function Disk() {
         <Folders />
       </TabsContent>
       <TabsContent value='file' className='mt-6'>
-        Change your password here.
+        <Files />
       </TabsContent>
     </Tabs>
   )

@@ -5,23 +5,16 @@ import { MoveIcon, TrashIcon, Pencil1Icon } from '@radix-ui/react-icons'
 
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { useState, useEffect } from 'react'
-import { useFolder, useDoubleClick, useSelect } from '@/app/(auth)/d/hook'
+import { useFiles, useDoubleClick, useSelect } from '@/app/(auth)/d/hook'
 import { useParams } from 'next/navigation'
 import { IFolder } from '@/supabase/crud/folder'
 import { useRouter } from 'next/navigation'
+import { IFile } from '@/supabase/crud/file'
 
-function Folder(props: IFolder) {
-  const { id, name } = props
-  const { folders, setFolders, clear } = useSelect()
+function File(props: IFile) {
+  const { id, name, url } = props
+  const { files, setFiles, clear } = useSelect()
   const router = useRouter()
 
   const onDoubleClick = () => {
@@ -30,8 +23,8 @@ function Folder(props: IFolder) {
   }
 
   const onClick = () => {
-    if (folders.includes(id)) return
-    setFolders([...folders, id])
+    if (files.includes(id)) return
+    setFiles([...files, id])
   }
 
   const { handleClick } = useDoubleClick(onClick, onDoubleClick)
@@ -40,40 +33,23 @@ function Folder(props: IFolder) {
     <motion.div
       whileHover={{ scale: 1.03 }}
       className={clsx(
-        'w-[257px] p-3 border-[1px] rounded-sm',
+        'w-[257px] border-[1px] rounded-sm flex flex-col',
         'hover:shadow-md flex gap-x-4 items-center justify-between cursor-pointer',
-        folders.includes(id) ? 'bg-blue-100 border-none' : 'border-slate-300',
+        files.includes(id) ? 'bg-blue-100 border-none' : 'border-slate-300',
       )}
       onClick={handleClick}
     >
-      <div className='flex gap-x-4 items-center'>
-        <FolderIcon className='w-6 h-6 text-yellow-700' />
-        <div className='text-slate-700 select-none'>{name}</div>
+      <div className='w-full flex items-center justify-center px-2 bg-gray-100'>
+        <img className='max-h-[100px]' src={url} />
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <DotsThreeVertical className='w-6 h-6 text-slate-700' />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem className='flex gap-x-2'>
-            <Pencil1Icon />
-            Rename
-          </DropdownMenuItem>
-          <DropdownMenuItem className='flex gap-x-2'>
-            <MoveIcon />
-            Move
-          </DropdownMenuItem>
-          <DropdownMenuItem className='flex gap-x-2'>
-            <TrashIcon />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className='w-full text-slate-700 select-none border-t-[1px] border-slate-300 py-1 text-center max-w-[200px] truncate'>
+        {name}
+      </div>
     </motion.div>
   )
 }
 
-const FolderLoading = () => {
+const FileLoading = () => {
   return (
     <div
       className={clsx(
@@ -100,13 +76,13 @@ const FolderLoading = () => {
   )
 }
 
-const FolderEmpty = () => {
-  return <div className=''>There are no current folder now.</div>
+const FileEmpty = () => {
+  return <div className=''>There are no current file now.</div>
 }
 
-export default function Folders() {
+export default function Files() {
   const [isLoading, setIsLoading] = useState(true)
-  const { folders, setFolders } = useFolder()
+  const { files, setFiles } = useFiles()
   const params = useParams()
 
   const folder_id = params.folder_id
@@ -116,11 +92,11 @@ export default function Folders() {
       setIsLoading(true)
 
       try {
-        const res = await fetch(`/api/disk/folder${folder_id ? `?id=${folder_id}` : ''}`)
+        const res = await fetch(`/api/disk/file${folder_id ? `?id=${folder_id}` : ''}`)
         const data = await res.json()
-        setFolders(data.data)
+        setFiles(data.data)
       } catch (error) {
-        setFolders([])
+        setFiles([])
       } finally {
         setIsLoading(false)
       }
@@ -130,7 +106,7 @@ export default function Folders() {
   }, [])
 
   return isLoading ? (
-    <FolderLoading />
+    <FileLoading />
   ) : (
     <div
       className={clsx(
@@ -138,8 +114,8 @@ export default function Folders() {
         'lg:grid lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5',
       )}
     >
-      {!isLoading && folders.length > 0 && folders.map(folder => <Folder key={folder.id} {...folder} />)}
-      {!isLoading && folders.length === 0 && <FolderEmpty />}
+      {!isLoading && files.length > 0 && files.map(file => <File key={file.id} {...file} />)}
+      {!isLoading && files.length === 0 && <FileEmpty />}
     </div>
   )
 }

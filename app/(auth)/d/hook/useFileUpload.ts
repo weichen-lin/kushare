@@ -4,6 +4,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import storage from '@/firebase/init'
 import { browserClient } from '@/supabase/client'
+import useFiles from './useFiles'
 
 enum FileUploadStatus {
   Success,
@@ -13,6 +14,8 @@ enum FileUploadStatus {
 export default function useFileUpload() {
   const router = useRouter()
   const params = useParams()
+
+  const { files, setFiles } = useFiles()
 
   const filehandle = async (handler: FileSystemFileHandle) => {
     return new Promise<number>(async (resolve, reject) => {
@@ -67,10 +70,26 @@ export default function useFileUpload() {
             const url = await getDownloadURL(storageRef)
 
             if (url) {
-              const { error } = await client.from('file').update({ url }).eq('id', data?.id)
+              const { error } = await client
+                .from('file')
+                .update({ url })
+                .eq('id', data?.id)
+                .select('id, locate_at, name, url, last_modified_at')
               if (error) {
                 reject(FileUploadStatus.Failed)
               }
+
+              setFiles([
+                ...files,
+                {
+                  id: data?.id,
+                  locate_at: currentLocateAt as string,
+                  name: file.name,
+                  url,
+                  // @ts-ignore
+                  last_modified_at: data?.last_modified_at as string,
+                },
+              ])
             }
 
             resolve(FileUploadStatus.Success)
