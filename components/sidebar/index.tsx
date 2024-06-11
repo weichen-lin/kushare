@@ -3,15 +3,14 @@
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import Link from 'next/link'
-import { StarIcon, ChatBubbleIcon, ExitIcon, DiscIcon } from '@radix-ui/react-icons'
+import { GearIcon, ExitIcon, DiscIcon } from '@radix-ui/react-icons'
 import { Button } from '@/components/ui/button'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 
 const Bars = [
   { name: 'Disk', icon: <DiscIcon />, path: 'd' },
-  { name: 'My Stars', icon: <StarIcon />, path: 'stars' },
-  { name: 'Start Chat', icon: <ChatBubbleIcon />, path: 'chats' },
+  { name: 'Setting', icon: <GearIcon />, path: 'settings' },
 ]
 
 export default function DesktopNavbar() {

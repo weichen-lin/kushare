@@ -1,8 +1,15 @@
 import { usePathname } from 'next/navigation'
-import { DashboardIcon } from '@radix-ui/react-icons'
+import { DashboardIcon, GearIcon } from '@radix-ui/react-icons'
 import { redirect } from 'next/navigation'
 
-const Bars = [{ name: 'Disk', icon: <DashboardIcon />, path: 'd' }]
+const Bars = [
+  { name: 'Disk', icon: <DashboardIcon />, path: 'd' },
+  {
+    name: 'Settings',
+    icon: <GearIcon />,
+    path: 'settings',
+  },
+]
 
 export default function useNavbar() {
   const pathname = usePathname()

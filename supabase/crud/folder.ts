@@ -68,7 +68,7 @@ export const createFolder = async (locate_at: string | null, name: string): Prom
     depth: 0,
   })
 
-  const { data: checker, error: a } = await client
+  const { data: checker } = await client
     .from('folder')
     .select('id, user_id, name, locate_at')
     .eq('user_id', user?.data?.user?.id)
