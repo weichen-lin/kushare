@@ -13,16 +13,55 @@ const platforms: { [key in IOauthUser['platform']]: JSX.Element } = {
 }
 
 const Intergration = (props: IOauthUser) => {
-  const { oauth_id, name, avatar_url, platform, store_at } = props
-  const [isLoading, setIsLoading] = useState(true)
+  const { name, avatar_url, platform, store_at } = props
   const [isUpdate, setIsUpdate] = useState(false)
-  const [options, setOptions] = useState<Option[]>([])
+  const [open, setOpen] = useState(false)
   const Icon = platforms[platform]
+
+  const close = () => {
+    setOpen(false)
+  }
+
+  const toogleUpdate = () => {
+    setIsUpdate(prev => !prev)
+  }
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={() => {
+        if (isUpdate) return
+        setOpen(!open)
+      }}
+    >
+      <DialogTrigger>
+        <div className='border-[1px] border-slate-100 flex gap-x-8 items-center p-4 hover:bg-slate-100 cursor-pointer'>
+          {Icon}
+          <div className='flex gap-x-2 items-center'>
+            {avatar_url && <img src={avatar_url} alt={name} className='w-9 h-9 rounded-full' />}
+            <span className='text-sm'>{name}</span>
+          </div>
+        </div>
+      </DialogTrigger>
+      <DialogContent className='w-[380px] flex flex-col gap-y-4'>
+        <DialogHeader>
+          <DialogTitle>Setting</DialogTitle>
+        </DialogHeader>
+        {open && <Content {...props} close={close} isUpdate={isUpdate} toogleUpdate={toogleUpdate} />}
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+const Content = (props: IOauthUser & { close: () => void; isUpdate: boolean; toogleUpdate: () => void }) => {
+  const { oauth_id, store_at, close, isUpdate, toogleUpdate } = props
+  const [isLoading, setIsLoading] = useState(true)
+  const [options, setOptions] = useState<Option[]>([])
 
   useEffect(() => {
     const fetchFolderInfo = async () => {
       try {
-        const res = await fetch(`/api/oauth/store?id=${store_at}`)
+        const res = await fetch(`/api/oauth/store?id=${oauth_id}`)
         const data = await res.json()
 
         if (data.error) {
@@ -41,22 +80,12 @@ const Intergration = (props: IOauthUser) => {
   }, [])
 
   return (
-    <Dialog>
-      <DialogTrigger>
-        <div className='border-[1px] border-slate-100 flex gap-x-8 items-center p-4 hover:bg-slate-100 cursor-pointer'>
-          {Icon}
-          <div className='flex gap-x-2 items-center'>
-            {avatar_url && <img src={avatar_url} alt={name} className='w-9 h-9 rounded-full' />}
-            <span className='text-sm'>{name}</span>
-          </div>
-        </div>
-      </DialogTrigger>
-      <DialogContent className='w-[380px] flex flex-col gap-y-4'>
-        <DialogHeader>
-          <DialogTitle>Setting</DialogTitle>
-        </DialogHeader>
-        <div className='my-4 flex space-y-2 flex-col text-slate-500'>
-          <div className=''>Photo store at</div>
+    <>
+      <div className='my-4 flex space-y-2 flex-col text-slate-500'>
+        <div className=''>Photo store at</div>
+        {isLoading ? (
+          <div className='w-full h-10 bg-slate-100 animate-pulse rounded-md'></div>
+        ) : (
           <MultipleSelector
             placeholder='choose a folder to store'
             onSearch={async value => {
@@ -78,29 +107,31 @@ const Intergration = (props: IOauthUser) => {
               setOptions(v)
             }}
           />
-        </div>
-        <DialogFooter className='gap-x-4'>
-          <Button
-            className='bg-slate-700'
-            disabled={!options.length}
-            loading={isUpdate}
-            onClick={async () => {
-              if (!options.length) return
-              setIsUpdate(true)
-              const newLocateAt = options[0]?.value ?? store_at
-              const res = await fetch(`/api/oauth/store?id=${store_at}`, {
-                method: 'PATCH',
-                body: JSON.stringify({ id: oauth_id, store_at: newLocateAt }),
-              })
+        )}
+      </div>
+      <DialogFooter className='gap-x-4'>
+        <Button
+          className='bg-slate-700'
+          disabled={!options.length}
+          loading={isUpdate}
+          onClick={async () => {
+            if (!options.length) return
+            toogleUpdate()
+            const newLocateAt = options[0]?.value ?? store_at
+            const res = await fetch(`/api/oauth/store`, {
+              method: 'PATCH',
+              body: JSON.stringify({ id: oauth_id, store_at: newLocateAt }),
+            })
 
-              const j = await res.json()
-            }}
-          >
-            Save
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+            const j = await res.json()
+            close()
+            toogleUpdate()
+          }}
+        >
+          Save
+        </Button>
+      </DialogFooter>
+    </>
   )
 }
 

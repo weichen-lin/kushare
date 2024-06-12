@@ -255,7 +255,7 @@ export const getFoldersByName = async (name: string): Promise<Result<IFolder[]>>
   }
 }
 
-export const getFolderInfo = async (folder_id: string): Promise<Result<IFolder | null>> => {
+export const getFolderInfo = async (oauth_id: string): Promise<Result<IFolder | null>> => {
   const client = createClient()
   const user = await client.auth.getUser()
 
@@ -265,6 +265,21 @@ export const getFolderInfo = async (folder_id: string): Promise<Result<IFolder |
       error: 'Unauthorized',
     }
   }
+
+  const { data: getFolderId, error: getFolderIdError } = await client
+    .from('integration')
+    .select('oauth_id, store_at')
+    .eq('oauth_id', oauth_id)
+    .single()
+
+  if (getFolderIdError) {
+    return {
+      data: null,
+      error: getFolderIdError.message,
+    }
+  }
+
+  const folder_id = getFolderId.store_at
 
   if (folder_id === user?.data?.user?.id) {
     return {

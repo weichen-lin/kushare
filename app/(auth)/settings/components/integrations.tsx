@@ -5,7 +5,6 @@ import Intergration from './integration'
 import clsx from 'clsx'
 import { useState, useEffect } from 'react'
 import { IOauthUser } from '@/supabase/crud/integration'
-import Image from 'next/image'
 
 export default function Intergrations() {
   const [isLoding, setIsLoading] = useState(true)
