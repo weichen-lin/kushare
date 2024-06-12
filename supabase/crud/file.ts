@@ -1,11 +1,6 @@
 import { createClient } from '@/supabase/sever'
 import { z } from 'zod'
-import { UUIDParser } from './utils'
-
-interface Result<T> {
-  data: T
-  error: string | null
-}
+import { UUIDParser, Result } from './utils'
 
 const fileSchema = z.object({
   id: z.string(),

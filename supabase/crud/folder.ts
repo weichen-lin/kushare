@@ -212,3 +212,97 @@ export const getFolders = async (locate_at: string | null): Promise<Result<IFold
     }
   }
 }
+
+export const getFoldersByName = async (name: string): Promise<Result<IFolder[]>> => {
+  const client = createClient()
+  const user = await client.auth.getUser()
+
+  if (!user) {
+    return {
+      data: [],
+      error: 'Unauthorized',
+    }
+  }
+
+  const { data, error } = await client
+    .from('folder')
+    .select('id, locate_at, name, depth, full_path, last_modified_at')
+    .eq('user_id', user?.data?.user?.id)
+    .textSearch('name', name)
+    .order('last_modified_at', { ascending: false })
+
+  if (error) {
+    return {
+      data: [],
+      error: error.message,
+    }
+  }
+
+  try {
+    const folders = data.map(f => {
+      return folderSchema.parse(f)
+    })
+
+    return {
+      data: folders,
+      error: null,
+    }
+  } catch (e) {
+    return {
+      data: [],
+      error: 'Invalid data',
+    }
+  }
+}
+
+export const getFolderInfo = async (folder_id: string): Promise<Result<IFolder | null>> => {
+  const client = createClient()
+  const user = await client.auth.getUser()
+
+  if (!user) {
+    return {
+      data: null,
+      error: 'Unauthorized',
+    }
+  }
+
+  if (folder_id === user?.data?.user?.id) {
+    return {
+      data: {
+        id: user?.data?.user?.id as string,
+        locate_at: folder_id,
+        name: 'Root directory',
+        depth: 0,
+        full_path: [],
+        last_modified_at: '',
+      },
+      error: null,
+    }
+  }
+
+  const { data, error } = await client
+    .from('folder')
+    .select('id, locate_at, name, depth, full_path, last_modified_at')
+    .eq('id', folder_id)
+    .eq('user_id', user?.data?.user?.id)
+    .single()
+
+  if (error) {
+    return {
+      data: null,
+      error: error.message,
+    }
+  }
+
+  try {
+    return {
+      data: folderSchema.parse(data),
+      error: null,
+    }
+  } catch (e) {
+    return {
+      data: null,
+      error: 'Invalid data',
+    }
+  }
+}

@@ -25,7 +25,7 @@ export default function Path() {
     const fetchPath = async () => {
       const res = await fetch(`/api/disk?id=${params.folder_id}`)
       const data = await res.json()
-      setPath(data.full_path)
+      setPath(data.data)
     }
 
     if (folder_id) fetchPath()
