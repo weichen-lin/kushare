@@ -1,7 +1,6 @@
 import { createClient } from '@/supabase/sever'
 import { z } from 'zod'
 import { UUIDParser, Result } from './utils'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 const platformSchema = z.enum(['line'])
 
@@ -101,4 +100,41 @@ const getIntegrations = async (): Promise<Result<IOauthUser[]>> => {
   }
 }
 
-export { createLineOauthUser, getIntegrations }
+const updateStoreAt = async (id: string, store_at: string): Promise<Result<boolean>> => {
+  const client = createClient()
+  const user = await client.auth.getUser()
+
+  if (!user) {
+    return {
+      data: false,
+      error: 'Unauthorized',
+    }
+  }
+
+  const checker = UUIDParser(store_at)
+
+  if (!checker) {
+    return {
+      data: false,
+      error: 'Invalid data',
+    }
+  }
+  console.log({ store_at, id })
+
+  const { error } = await client.from('integration').update({ store_at }).match({ oauth_id: id })
+  console.log({ error })
+
+  if (error) {
+    return {
+      data: false,
+      error: error.message,
+    }
+  }
+
+  return {
+    data: true,
+    error: null,
+  }
+}
+
+export { createLineOauthUser, getIntegrations, updateStoreAt }
